@@ -1,0 +1,95 @@
+<!DOCTYPE html> 
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title></title>
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+      <style>
+         body { margin:0; padding:0; font-size:14px; font-family:"Open Sans", "Helvetica Neue", Helvetica, sans-serif; }
+         h1, h2, h3, h4, h5, input, select, button, textarea { font-family:"Open Sans", "Helvetica Neue", sans-serif; }
+         a { text-decoration:none;color:#00c; }
+         a:hover { text-decoration:underline; }
+         a:visited { color:#006; }
+         a:active { color:#e00;display:inline-block;top:2px; }
+         #main { margin:1em; }
+         #card,.card { border: 3px solid #000; border-collapse: collapse; border-bottom:4px solid #000; margin:1em auto; }
+         #card,.card th { font-weight:bold; height:60px; width:100px; font-size:3em; color:#fff; background-color:#000; }
+         #card,.card td { border: 1px solid #333; width: 100px; height:100px; text-align:center; overflow:hidden; }
+         .free { background-color:#000; color:#fff; font-weight:bold;font-size:1.2em;}
+         .marked { background-color:#0b0; color:#fff; font-weight:bold; border-radius:100px; }
+         .square { font-weight:bold; color:#000; text-shadow:0px 0px 0px rgb(255, 255, 255); background-repeat:no-repeat; vertical-align:bottom; }
+         .label { background-color:rgba(255, 255, 255, .7); }
+      </style>
+  </head>
+   <body>
+      <input type='text' size='4' value='1' id='cards'><button onclick="handleButton()">Make Card[s]</button>
+      <div id='main'>
+      </div>
+   </body>
+   <script src="bingo.js"></script>
+   <script>
+         function init() {
+
+         }
+
+         function loadList(src) {
+            var el = document.createElement("script");
+            el.src = "bingo.js";
+            document.head.appendChild(el);
+         }
+
+         function makeCard(container) {
+            var el = document.createElement("script");
+            el.src = "bingo.js";
+            document.head.appendChild(el);
+            
+            var out = "<tr><th>B</th><th>I</th><th>N</th><th>G</th><th>O</th></tr><tr>";
+            
+            for (var row=0; row<5; row++) {
+               for (var col=0; col<5; col++) {
+                  if (row==2 && col ==2) {
+                     out += "<td class='free'>FREE<br>SPACE</td>";
+                  } else {
+                     item = getItem();
+                     img = item.replace(/\W/g, '-') + '.png'.toLowerCase();
+                     out += "<td class='square' style='background-image:url(img/"+img+")' onclick='markSpot(this)'><div class='label'>" + item + "</div></td>";
+                  }
+               }
+               out += "</tr><tr>";
+            }
+            out += "</tr>";
+            var card = document.createElement("table");
+            card.className = "card";
+            card.innerHTML = out;
+
+            container = (typeof container === "String") ? document.getElementById(container) : container;
+            if (container) {
+               container.appendChild(card);
+            }
+         }
+         
+         function handleButton() {
+            var count = document.getElementById('cards').value, i, 
+                container = document.getElementById('main');
+            container.innerHTML = "";
+
+            for (var i=0; i<count; i++) {
+               makeCard(container);
+            }
+         }
+         function getItem() {
+            var pick = Math.round(Math.random() * (squares.length - 1));
+            var txt = squares[pick];
+            squares.splice(pick, 1);
+
+            return txt;
+         }
+
+         function markSpot(who) {
+            who.classList.toggle("marked");
+            return false;
+         }
+         makeCard();
+   </script>
+</html>
