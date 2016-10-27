@@ -30,7 +30,8 @@
    <script src="bingo.js"></script>
    <script>
          function init() {
-
+            loadList("bingo.js");
+            makeCard(document.getElementById("main"));
          }
 
          function loadList(src) {
@@ -90,6 +91,13 @@
             who.classList.toggle("marked");
             return false;
          }
-         makeCard();
+
+         if (document.ready) {
+            init();
+         } else {
+            document.addEventListener("DOMContentLoaded", function(event) { 
+              init();
+           });
+         }
    </script>
 </html>
