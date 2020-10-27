@@ -29,22 +29,23 @@
    </body>
    <script src="bingo.js"></script>
    <script>
+       var bingo = {};
          function init() {
             loadList("bingo.js");
             makeCard(document.getElementById("main"));
+
          }
 
          function loadList(src) {
             var el = document.createElement("script");
             el.src = "bingo.js";
+            el.onload = function() { bingo.squares = squares; }
             document.head.appendChild(el);
          }
 
          function makeCard(container) {
-            var el = document.createElement("script");
-            el.src = "bingo.js";
-            document.head.appendChild(el);
-            
+            var squares = bingo.squares.map((x)=>x);
+
             var out = "<tr><th>B</th><th>I</th><th>N</th><th>G</th><th>O</th></tr><tr>";
             
             for (var row=0; row<5; row++) {
@@ -52,8 +53,12 @@
                   if (row==2 && col ==2) {
                      out += "<td class='free'>FREE<br>SPACE</td>";
                   } else {
-                     item = getItem();
-                     img = item.replace(/\W/g, '-') + '.png'.toLowerCase();
+                     [item, squares] = getItem(squares);
+                      if (item) {
+                          img = item.replace(/\W/g, '-') + '.png'.toLowerCase();
+                      } else {
+                        console.log("Bad item: "+item);
+                      }
                      out += "<td class='square' style='background-image:url(img/"+img+")' onclick='markSpot(this)'><div class='label'>" + item + "</div></td>";
                   }
                }
@@ -79,19 +84,65 @@
                makeCard(container);
             }
          }
-         function getItem() {
-            var pick = Math.round(Math.random() * (squares.length - 1));
-            var txt = squares[pick];
-            squares.splice(pick, 1);
-
-            return txt;
+         function getItem(squares) {
+            var txt = '';
+                var pick = Math.round(Math.random() * (squares.length - 1));
+                var txt = squares[pick];
+                squares.splice(pick, 1);
+            return [txt, squares];
          }
 
          function markSpot(who) {
             who.classList.toggle("marked");
             return false;
          }
-
+squares = bingo.squares = ["Eye Patch",
+"Guy Mullet",
+"Camouflage",
+"Giant Belt Buckle",
+"Mother/Daughter Skanks",
+"Overalls",
+"Cowboy Hat",
+"Tattooed Boob",
+"Boobs about to fall out",
+"Mohawk",
+"Man Pony Tail",
+"Old Person Grinding on Dance Floor",
+"Skunk Hair",
+"Pregnant Chick",
+"Booty Grinding Dancing",
+"Female Mullet",
+"Fishnet Hose",
+"Raw Hide Clothing",
+"Sequined Gown",
+"Bandana",
+"Teased 80's Hair",
+"Dolly Parton Look-Alike",
+"NASCAR Jacket",
+"Member's Only Jacket",
+"Fur Coat",
+"Clip-on Chains",
+"Micro Mini that should never",
+"Boots with Fur",
+"Man Camel Toe",
+"Female Camel Toe",
+"Obvious Fake Boobs",
+"Really Spiked Hair",
+"Man w/3 or more open shirt buttons",
+"Civil War Hat",
+"Bad Rug",
+"Leather Hat w/Studs",
+"That Bitch",
+"Gravity Defying Tube Top",
+"Pimp Hat/Outfit",
+"Missing Teeth",
+"Leather Pants",
+"Dreads",
+"Skinny Jeans",
+"Big Ole Booty",
+"Facial Piercing",
+"Neck Beard",
+"Inappropriate Display of Affection"];
          if (document.ready) {
             init();
          } else {
